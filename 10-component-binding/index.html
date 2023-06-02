@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    <div
+      data-bind="component: {
+        name: 'login-component',
+        params: {username: 'ryan', password:'test1234'}
+    }"
+    ></div>
+
+    <br />
+
+    <login-component params="username: 'crasta', password: 'pass6789'">
+    </login-component>
+
+    <template id="login-template">
+      Username:
+      <input type="text" name="textusername" data-bind="value: username" />
+      <br />
+      <br />
+      Password:
+      <input type="text" name="textpassword" data-bind="value: password" />
+    </template>
+
+    <script>
+      function LoginComponentViewModel(params) {
+        this.username = params.username;
+        this.password = params.password;
+      }
+
+      ko.components.register("login-component", {
+        viewModel: LoginComponentViewModel,
+        template: { element: "login-template" },
+      });
+
+      ko.applyBindings();
+    </script>
+  </body>
+</html>

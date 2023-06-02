@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#btnSubmit").click(function () {
+          console.log($(""));
+        });
+      });
+    </script>
+    <style>
+      .selected {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody
+        data-bind="foreach: {
+        data: Accounts, as:'Account'}"
+      >
+        <tr
+          style="cursor: pointer"
+          data-bind="css: {selected: Account.id === ($parent.selectedAccount() === null ? -1 : $parent.selectedAccount().id)},
+          click: $parent.selectAccount"
+        >
+          <td data-bind="text: ($index()+1) + '/' + ($parent.count())"></td>
+          <td data-bind="text: Account.id"></td>
+          <td data-bind="text: Account.name"></td>
+          <td data-bind="text: Account.balance"></td>
+          <td>
+            <button
+              id="btnSubmit"
+              data-bind="click: $parent.selectAccount, clickBubble: false"
+            >
+              Select
+            </button>
+          </td>
+
+          <td>
+            <button
+              id="btnDelete"
+              data-bind="click: $parent.deleteAccount, clickBubble: false"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <input type="text" data-bind="value: amountAdd" />
+
+    <br /><br />
+
+    <input type="text" data-bind="value: amountMinus" />
+    <button data-bind="click: () => withdraw(5)">Withdraw</button>
+
+    <script>
+      function Account(id, name, balance, deposits) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+      }
+
+      function AccountViewModel() {
+        this.selectedAccount = ko.observable(null);
+
+        this.selectId = ko.observable("");
+
+        this.amountAdd = ko.observable(0);
+        this.amountMinus = ko.observable(0);
+
+        this.Accounts = ko.observableArray([
+          new Account("A109", "Shyam", 10),
+          new Account("S120", "Ram", 20),
+          new Account("L123", "Baburao", 30),
+          new Account("D412", "Ganshyam", 40),
+        ]);
+
+        this.count = ko.computed(() => {
+          return this.Accounts().length;
+        });
+
+        this.selectAccount = (account) => {
+          let obj = [];
+          this.Accounts().forEach((element) => {
+            if (element.id === account.id) {
+              const { balance } = element;
+              let o = {
+                ...element,
+                balance: Number(balance) + Number(this.amountAdd()),
+              };
+              obj.push(o);
+            } else {
+              obj.push(element);
+            }
+          });
+
+          this.Accounts([...obj]);
+
+          return this.selectedAccount(account);
+        };
+
+        this.withdraw = (minAmount) => {
+          console.log(
+            this.selectedAccount().balance,
+            this.amountMinus(),
+            minAmount
+          );
+
+          if (
+            this.selectedAccount().balance - Number(this.amountMinus()) <=
+            minAmount
+          ) {
+            alert("wrong transaction");
+          } else {
+            let obj = [];
+
+            this.Accounts().forEach((element) => {
+              if (element.id === this.selectedAccount().id) {
+                const { balance } = element;
+                let o = {
+                  ...element,
+                  balance: Number(balance) - Number(this.amountMinus()),
+                };
+                obj.push(o);
+              } else {
+                obj.push(element);
+              }
+            });
+
+            this.Accounts([...obj]);
+          }
+        };
+
+        this.deleteAccount = (account) => {
+          this.Accounts.remove(account);
+        };
+
+        this.colorChange = ko.observable(false);
+      }
+
+      let obj = new AccountViewModel();
+      ko.applyBindings(obj);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+
+    <style>
+      .redColor {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <input
+      type="range"
+      data-bind="value: numberViewModel.num"
+      name="txtNumber"
+      min="1"
+      max="100"
+    />
+
+    <span data-bind="visible: isEvenNumber()">Even</span>
+    <span data-bind="visible: !isEvenNumber()">Odd</span>
+
+    <br /><br />
+    The number is:
+    <!-- <span data-bind="text: num()"></span> -->
+    <!--ko text:num()--><!--/ko-->
+
+    <br /><br />
+
+    when used text: <span data-bind="text: formattedNumber()"> </span>
+    <br /><br />
+
+    when used html: <span data-bind="html: formattedNumber"> </span>
+
+    <br /><br />
+    style binding eg:
+    <span data-bind="style: {color: displayColor, fontWeight: displayFont}"
+      >color</span
+    >
+
+    <br /><br />
+    CSS binding eg:
+    <span data-bind="css: {redColor: isGreaterThan50}">
+      this shows in red if number is greater than 50
+    </span>
+
+    <br /><br />
+
+    <a data-bind="attr: {href: isEvenNumber() ? urls[0] : urls[1]}"
+      >Link plz click me</a
+    >
+
+    <script>
+      function myViewModel() {
+        this.num = ko.observable(1);
+
+        this.isEvenNumber = ko.computed(() => {
+          return this.num() % 2 === 0;
+        });
+
+        this.formattedNumber = ko.computed(() => {
+          return "<b>" + this.num() + "</b>";
+        });
+
+        this.displayColor = ko.computed(() => {
+          if (this.num() > 50) {
+            return "Red";
+          } else {
+            return "Green";
+          }
+        });
+
+        this.displayFont = ko.computed(() => {
+          if (this.num() > 50) {
+            return "bold";
+          } else {
+            return "lighter";
+          }
+        });
+
+        this.isGreaterThan50 = ko.computed(() => {
+          if (this.num() > 50) {
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        this.urls = ["https://www.youtube.com/", "https://www.facebook.com/"];
+      }
+
+      let numberViewModel = new myViewModel();
+
+      ko.applyBindings(numberViewModel);
+    </script>
+  </body>
+</html>

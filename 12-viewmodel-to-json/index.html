@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+    <script src="../knockout.mapping.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#btnConvertToJS").click(function () {
+          let acc = obj.Accounts()[0];
+          console.log(acc.balance);
+
+          let accJS = ko.toJS(acc);
+
+          console.log(accJS);
+        });
+
+        $("#btnConvertToJSON").click(function () {
+          let acc = obj.Accounts();
+          console.log(acc.balance);
+
+          let accJSONString = ko.toJSON(acc);
+          let accJSON = JSON.parse(accJSONString);
+
+          console.log(accJSON);
+        });
+
+        $("#btnConvertFromJS").click(function () {
+          let acc = {
+            id: 100,
+            name: "sachin",
+            balance: 3489203,
+          };
+
+          let accViewModel = ko.mapping.fromJS(acc);
+
+          console.log(accViewModel);
+        });
+
+        $("#btnConvertFromJSON").click(function () {
+          let acc = JSON.stringify({
+            id: 238932,
+            name: "Dhoni",
+            balance: 8239921,
+          });
+
+          let accViewModel = ko.mapping.fromJSON(acc);
+
+          console.log(accViewModel.balance());
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <table data-bind="foreach: Accounts">
+      <tr>
+        <td data-bind="text: id"></td>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: balance"></td>
+      </tr>
+    </table>
+
+    <button id="btnConvertToJS">Convert to JS</button>
+    <button id="btnConvertToJSON">Convert to JSON</button>
+
+    <br />
+    <button id="btnConvertFromJS">Covert from JS</button>
+    <button id="btnConvertFromJSON">Covert from JSON</button>
+
+    <pre data-bind="text: ko.toJSON($root, null, 2)"></pre>
+    <script>
+      function Account(id, name, balance, status) {
+        this.id = ko.observable(id);
+        this.name = ko.observable(name);
+        this.balance = ko.observable(balance);
+      }
+
+      function myAccountViewModel() {
+        this.Accounts = ko.observableArray([
+          new Account(1, "Ramu", 381921),
+          new Account(2, "Shamu", 1243910),
+          new Account(3, "Gopal", 7281991),
+          new Account(4, "Laxmi", 617821),
+        ]);
+      }
+
+      let obj = new myAccountViewModel();
+
+      ko.applyBindings(obj);
+    </script>
+  </body>
+</html>

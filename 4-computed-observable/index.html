@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // $("#btnShowDetails").click(function () {
+        //   alert(accViewModel.id + " " + accViewModel.balance);
+        // });
+
+        $("#btnDeposit").click(function () {
+          accViewModel.balance(
+            accViewModel.balance() + Number($("#txtAmount").val())
+          );
+        });
+
+        $("#btnAddAccount").click(function () {
+          let newacc = new Account(
+            $("#txtNewId").val(),
+            $("#txtNewName").val(),
+            $("#txtNewBalance").val()
+          );
+
+          accViewModel.Accounts.push(newacc);
+          // alert(accViewModel.Accounts().length);
+        });
+
+        $("#btnPopAccount").click(function () {
+          accViewModel.Accounts.pop();
+          // alert(accViewModel.Accounts().length);
+        });
+
+        $("#ddlAccount").change(function () {
+          let selectedIndex =
+            document.getElementById("ddlAccount").selectedIndex;
+
+          accViewModel.selectedIndex(selectedIndex);
+
+          // console.log(accViewModel.Accounts()[selectedIndex]);
+          // const { id, name, balance } = accViewModel.Accounts()[selectedIndex];
+
+          // accViewModel.id(id);
+          // accViewModel.name(name);
+          // accViewModel.balance(balance);
+        });
+      });
+    </script>
+  </head>
+  <body>
+    Account id's:
+    <select
+      id="ddlAccount"
+      data-bind="options: Accounts, optionsText: 'id', optionsValue:'id'"
+    ></select>
+
+    Total balance: <span data-bind="text: totalBalance()"></span>
+
+    <hr />
+
+    <h2>My acc details</h2>
+    Id: <span data-bind="text: Accounts()[selectedIndex()].id"></span><br />
+    Name: <span data-bind="text: Accounts()[selectedIndex()].name"></span><br />
+    Balance: <span data-bind="text: Accounts()[selectedIndex()].balance"></span>
+
+    <input type="button" value="ShowDetails" id="btnShowDetails" />
+
+    <br />
+
+    <hr />
+    New id: <input type="text" id="txtNewId" /> <br />
+    <br />
+    New Name: <input type="text" id="txtNewName" /> <br />
+    <br />
+    New Balance: <input type="text" id="txtNewBalance" /> <br />
+    <br />
+    <input type="button" value="Add Account" id="btnAddAccount" />
+    <br /><br />
+
+    <input type="button" value="Pop Account" id="btnPopAccount" />
+
+    <script>
+      // Model object
+      function Account(id, name, balance) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+      }
+
+      // View model
+      function AccountViewModel(acc) {
+        // this.id = ko.observable(acc.id);
+        // this.name = ko.observable(acc.name);
+        // this.balance = ko.observable(acc.balance);
+
+        let a1 = new Account(101, "A101", 1);
+        let a2 = new Account(102, "A102", 2);
+        let a3 = new Account(103, "A103", 3);
+
+        this.Accounts = ko.observableArray([a1, a2, a3]);
+
+        this.totalBalance = ko.computed(() => {
+          console.log(this);
+
+          let total = 0;
+
+          for (let i = 0; i < this.Accounts().length; i++) {
+            total += Number(this.Accounts()[i].balance);
+          }
+
+          return total;
+        });
+
+        this.selectedIndex = ko.observable(0);
+      }
+
+      let acc1 = new Account(1, "dummy name", 10);
+
+      let accViewModel = new AccountViewModel(acc1);
+
+      ko.applyBindings(accViewModel);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    <table data-bind="foreach: Accounts">
+      <tr>
+        <td data-bind="text: id"></td>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: balance"></td>
+        <td
+          data-bind="component: {
+          name: 'trans-component',
+          params: {trans: transactions, name: name}
+      }"
+        ></td>
+      </tr>
+    </table>
+
+    <template id="trans-template">
+      <ul data-bind="foreach: trans">
+        <li
+          data-bind="text: 'hello' + ' ' + $parent.name + ' you deposited ' + $data"
+        ></li>
+      </ul>
+    </template>
+
+    <script>
+      function TransactionsViewModel(params) {
+        this.name = params.name;
+        this.trans = params.trans;
+      }
+
+      function Address(street, city, state) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+      }
+
+      function Account(id, name, balance, transactions) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+        this.transactions = transactions;
+      }
+
+      function PersonViewModel() {
+        this.name = ko.observable("ryan");
+        this.residenceAddress = new Address(
+          "uttan road",
+          "bhayandar",
+          "Maharashtra"
+        );
+        this.officeAddress = new Address(
+          "mahape",
+          "navi mumbai",
+          "maharashtra"
+        );
+
+        this.Accounts = ko.observableArray([
+          new Account("A101", "Sam", "20", [+100, -90, +9000, -87]),
+          new Account("A301", "John", "378299", [+89000, -780, -9000]),
+          new Account(
+            "A901",
+            "Max",
+            "392992",
+            [+100000, -94020, +92920, +9392, -89999]
+          ),
+        ]);
+
+        this.TemplateName = function (account) {
+          console.log(account);
+          return Number(account.balance) < 1000
+            ? "low-balance-template"
+            : "high-balance-template";
+        };
+      }
+
+      ko.components.register("trans-component", {
+        viewModel: TransactionsViewModel,
+        template: { element: "trans-template" },
+      });
+
+      let p1 = new PersonViewModel();
+      ko.applyBindings(p1);
+    </script>
+  </body>
+</html>

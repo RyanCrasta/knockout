@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    <input
+      id="checkBox"
+      type="checkbox"
+      name="Name"
+      data-bind="checked: callViewModel.showHideSection"
+    />
+
+    <div id="div1" data-bind="if: callViewModel.showHideSection">
+      This is a block 1
+    </div>
+
+    <button onclick="alert(document.getElementById('div1').innerHTML)">
+      Div 1
+    </button>
+
+    <div id="div2" data-bind="visible: showHideSection">This is block 2</div>
+
+    <button onclick="alert(document.getElementById('div2').innerHTML)">
+      Div 2
+    </button>
+
+    <script>
+      function myViewModel() {
+        this.showHideSection = ko.observable(true);
+      }
+
+      let callViewModel = new myViewModel();
+
+      ko.applyBindings(callViewModel);
+    </script>
+  </body>
+</html>

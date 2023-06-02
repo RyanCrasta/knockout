@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#btnShowDetails").click(function () {
+          alert(accViewModel.id + " " + accViewModel.balance());
+        });
+
+        $("#btnDeposit").click(function () {
+          accViewModel.balance(
+            accViewModel.balance() + Number($("#txtAmount").val())
+          );
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h2>My acc details</h2>
+    Id: <span data-bind="text: id"></span><br />
+    Name: <span data-bind="text: name"></span><br />
+    Balance: <span data-bind="text: balance()"></span>
+
+    <input type="button" value="ShowDetails" id="btnShowDetails" />
+
+    <br />
+    Amount: <input type="text" id="txtAmount" />
+    <input type="button" value="deposit" id="btnDeposit" />
+
+    <hr />
+
+    New balance:
+    <input type="text" data-bind="value: balance()" />
+
+    <script>
+      // Model object
+      function Account(id, name, balance) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+      }
+
+      // View model
+      function AccountViewModel(acc) {
+        this.id = acc.id;
+        this.name = acc.name;
+        this.balance = ko.observable(acc.balance);
+      }
+
+      let acc1 = new Account(1, "A1", 100000);
+
+      let accViewModel = new AccountViewModel(acc1);
+
+      ko.applyBindings(accViewModel);
+    </script>
+  </body>
+</html>

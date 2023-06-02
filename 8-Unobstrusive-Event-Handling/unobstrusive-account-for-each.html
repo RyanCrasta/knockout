@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $(".btn-delete-account").click(function () {
+          let account = ko.dataFor(this);
+          let tp = ko.contextFor(this);
+
+          console.log("&&&&&&&", tp);
+          console.log("before", tp.$parent.Accounts().length);
+
+          obj.Accounts.remove(account);
+
+          console.log("after", tp.$parent.Accounts().length);
+        });
+      });
+    </script>
+
+    <style>
+      .selected {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <input data-bind="textInput: Prop1" /> <br />
+    <input data-bind="value: Prop2" /> <br />
+
+    <span data-bind="text: (Prop1() + ' ' + Prop2())"></span>
+
+    <br /><br />
+
+    1<input type="checkbox" value="1" data-bind="checked: DemoArray " />
+
+    2<input type="checkbox" value="2" data-bind="checked: DemoArray " /> 3<input
+      type="checkbox"
+      value="3"
+      data-bind="checked: DemoArray "
+    />
+    4<input type="checkbox" value="4" data-bind="checked: DemoArray " /> 5<input
+      type="checkbox"
+      value="5"
+      data-bind="checked: DemoArray "
+    />
+    6<input type="checkbox" value="6" data-bind="checked: DemoArray " /> 7<input
+      type="checkbox"
+      value="7"
+      data-bind="checked: DemoArray "
+    />
+    8<input type="checkbox" value="8" data-bind="checked: DemoArray " /> 9<input
+      type="checkbox"
+      value="9"
+      data-bind="checked: DemoArray "
+    />
+    10<input type="checkbox" value="10" data-bind="checked: DemoArray" />
+    <br /><br />
+    <span data-bind="text: DemoArray()"></span>
+
+    <br /><br />
+
+    <select
+      size="4"
+      multiple="multiple"
+      data-bind="options: DemoArray, selectedOptions: DemoArrayFiltered"
+    ></select>
+
+    <br /><br />
+
+    <span data-bind="text: DemoArrayFiltered()"></span>
+
+    <br /><br />
+
+    <select
+      data-bind="options: departments, optionsText: 'name', optionsValue: 'id'"
+    ></select>
+
+    <script>
+      function Department(id, name) {
+        this.id = id;
+        this.name = name;
+      }
+
+      function AccountViewModel() {
+        this.Prop1 = ko.observable("ABC");
+
+        this.Prop2 = ko.observable("XYZ");
+
+        this.DemoArray = ko.observableArray([
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "8",
+          "9",
+          "10",
+        ]);
+
+        this.DemoArrayFiltered = ko.observableArray(["1", "2", "3", "9"]);
+
+        this.numbersAreVisible = ko.observable(true);
+        let d1 = new Department(true);
+        this.numbers = ko.observableArray(["One", "Two", "Three", "Four"]);
+        this.selectedNumbers = ko.observableArray(["One", "Four"]);
+        this.departments = ko.observableArray([
+          new Department(1, "d1"),
+          new Department(2, "d2"),
+        ]);
+      }
+
+      let obj = new AccountViewModel();
+      ko.applyBindings(obj);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    <div>City: <span data-bind="text: city"></span></div>
+    <br />
+
+    <div>Office phone: <span data-bind="text: phone.office"></span></div>
+    <br />
+
+    <div>Home phone: <span data-bind="text: phone.home"></span></div>
+
+    <!-- OOOOORRRRR -->
+
+    <hr />
+
+    <span data-bind="with: phone">
+      Office phone: <span data-bind="text: office"></span> <br />
+      <br />
+      Home phone: <span data-bind="text: home"></span>
+    </span>
+
+    <script>
+      function myViewModel() {
+        this.city = ko.observable("Mumbai");
+        this.phone = {
+          home: "9875243671",
+          office: "94679100392",
+        };
+      }
+
+      let callViewModel = new myViewModel();
+
+      ko.applyBindings(callViewModel);
+    </script>
+  </body>
+</html>

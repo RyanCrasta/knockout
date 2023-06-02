@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://code.jquery.com/jquery-3.7.0.min.js"
+      integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g="
+      crossorigin="anonymous"
+    ></script>
+    <script src="../knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    Name: <span data-bind="text: name"></span> <br />
+    <br />
+
+    Residence Address:
+    <div
+      data-bind="template: {
+        name: 'address-template',
+        data: residenceAddress
+    }"
+    ></div>
+
+    <hr />
+    Office Address:
+    <div
+      data-bind="template: {
+        name: 'address-template',
+        data: officeAddress, if: (officeAddress !== null)
+    }"
+    ></div>
+    <hr />
+
+    <table
+      data-bind="template: {
+        name: 'account-template',
+        foreach: Accounts
+    }"
+    ></table>
+
+    <br />
+
+    <table
+      data-bind="template: {name: TemplateName, foreach: Accounts}"
+    ></table>
+
+    <script id="address-template" type="text/html">
+      Street: <span data-bind="text: street"></span> <br />
+      City: <span data-bind="text: city"></span> <br />
+      State: <span data-bind="text: state"></span>
+    </script>
+
+    <script id="account-template" type="text/html">
+      <tr>
+        <td data-bind="text: id"></td>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: balance"></td>
+      </tr>
+    </script>
+
+    <script id="low-balance-template" type="text/html">
+      <tr style="color: red">
+        <td data-bind="text: id"></td>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: balance"></td>
+      </tr>
+    </script>
+
+    <script id="high-balance-template" type="text/html">
+      <tr style="color: green">
+        <td data-bind="text: id"></td>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: balance"></td>
+      </tr>
+    </script>
+
+    <script>
+      function Address(street, city, state) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+      }
+
+      function Account(id, name, balance) {
+        this.id = id;
+        this.name = name;
+        this.balance = balance;
+      }
+
+      function PersonViewModel() {
+        this.name = ko.observable("ryan");
+        this.residenceAddress = new Address(
+          "uttan road",
+          "bhayandar",
+          "Maharashtra"
+        );
+        this.officeAddress = new Address(
+          "mahape",
+          "navi mumbai",
+          "maharashtra"
+        );
+
+        this.Accounts = ko.observableArray([
+          new Account("A101", "Sam", "20"),
+          new Account("A301", "John", "378299"),
+          new Account("A901", "Max", "392992"),
+        ]);
+
+        this.TemplateName = function (account) {
+          console.log(account);
+          return Number(account.balance) < 1000
+            ? "low-balance-template"
+            : "high-balance-template";
+        };
+      }
+
+      let p1 = new PersonViewModel();
+      ko.applyBindings(p1);
+    </script>
+  </body>
+</html>
